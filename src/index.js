@@ -6,11 +6,41 @@ const store = {
         localStorage.setItem("menu", JSON.stringify(menu));
     },
     getLocalStorage(){
-        localStorage.getItem("menu");
+        return JSON.parse(localStorage.getItem("menu"));
     }
 }
 function App() {
     this.menu = [];
+    const render = () => {
+        const template = this.menu
+            .map((item, index) => {
+                return `<li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
+                          <span class="w-100 pl-2 menu-name">${item.name}</span>
+                          <button
+                            type="button"
+                            class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
+                          >
+                            수정
+                          </button>
+                          <button
+                            type="button"
+                            class="bg-gray-50 text-gray-500 text-sm menu-remove-button"
+                          >
+                            삭제
+                          </button>
+                        </li>`;
+            })
+            .join("");
+        $("#espresso-menu-list").innerHTML = template;
+        updateMenuCount();
+    }
+
+    this.init = () => {
+        if (store.getLocalStorage().length > 0) {
+            this.menu = store.getLocalStorage();
+        }
+        render();
+    }
 
     // 총 개수 업데이트
     const updateMenuCount = () => {
@@ -35,6 +65,8 @@ function App() {
             updateMenuCount();
         }
     }
+
+
     const addMenuName = () => {
         if ($("#espresso-menu-name").value === "") {
             alert("값을 입력해주세요.")
@@ -43,26 +75,7 @@ function App() {
         let espressoMenuName = $("#espresso-menu-name").value;
         this.menu.push({name : espressoMenuName});
         store.setLocalStorage(this.menu);
-        const template = this.menu
-            .map((item, index) => {
-                return `<li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
-                          <span class="w-100 pl-2 menu-name">${item.name}</span>
-                          <button
-                            type="button"
-                            class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
-                          >
-                            수정
-                          </button>
-                          <button
-                            type="button"
-                            class="bg-gray-50 text-gray-500 text-sm menu-remove-button"
-                          >
-                            삭제
-                          </button>
-                        </li>`;})
-            .join("");
-        $("#espresso-menu-list").innerHTML = template;
-        updateMenuCount();
+        render();
 
         // input 값 빈 값으로 초기화
         $("#espresso-menu-name").value = "";
@@ -89,4 +102,5 @@ function App() {
 
 }
 
-new App();
+const app = new App();
+app.init();

@@ -20,11 +20,11 @@
 
 ## Step 2.
 ### TODO localStorage Read & Write
-- [X ] localStorage 에 데이터를 저장한다.
+- [X] localStorage 에 데이터를 저장한다.
   - [X] 메뉴를 추가할 때
   - [X] 메뉴를 수정할 때
   - [X] 메뉴를 삭제할 때
-- [ ] localStorage 에서 데이터를 읽어온다.
+- [X] localStorage 에서 데이터를 읽어온다.
 
 ### TODO 메뉴판 관리 
 - [ ] 프라푸치노 메뉴판 관리
