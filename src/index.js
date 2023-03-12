@@ -38,7 +38,7 @@ function App() {
                         </li>`;
             })
             .join("");
-        $("#espresso-menu-list").innerHTML = template;
+        $("#menu-list").innerHTML = template;
         updateMenuCount();
     }
     this.init = () => {
@@ -50,7 +50,7 @@ function App() {
 
     // 총 개수 업데이트
     const updateMenuCount = () => {
-        let menuCount = $("#espresso-menu-list").querySelectorAll("li").length;
+        let menuCount = $("#menu-list").querySelectorAll("li").length;
         $(".menu-count").innerText = `총 ${menuCount} 개`;
     }
     const updateMenuName = (e) => {
@@ -72,20 +72,20 @@ function App() {
         }
     }
     const addMenuName = () => {
-        if ($("#espresso-menu-name").value === "") {
+        if ($("#menu-name").value === "") {
             alert("값을 입력해주세요.")
             return;
         }
-        let espressoMenuName = $("#espresso-menu-name").value;
-        this.menu[this.currentCategory].push({name : espressoMenuName});
+        let menuName = $("#menu-name").value;
+        this.menu[this.currentCategory].push({name : menuName});
         store.setLocalStorage(this.menu);
         render();
 
         // input 값 빈 값으로 초기화
-        $("#espresso-menu-name").value = "";
+        $("#menu-name").value = "";
     }
 
-    $("#espresso-menu-list").addEventListener("click", (e) => {
+    $("#menu-list").addEventListener("click", (e) => {
         if (e.target.classList.contains("menu-edit-button")){
             updateMenuName(e);
         }
@@ -93,11 +93,11 @@ function App() {
             deleteMenuName(e);
         }
     })
-    $("#espresso-menu-form").addEventListener("submit", (e) => {
+    $("#menu-form").addEventListener("submit", (e) => {
         e.preventDefault();
     })
-    $("#espresso-menu-submit-button").addEventListener("click", addMenuName);
-    $("#espresso-menu-name").addEventListener('keypress', (e) => {
+    $("#menu-submit-button").addEventListener("click", addMenuName);
+    $("#menu-name").addEventListener('keypress', (e) => {
             if (e.key !== 'Enter') {
                 return ;
             }
@@ -107,7 +107,9 @@ function App() {
         const isCategory = e.target.classList.contains("cafe-category-name");
         if (isCategory) {
             const categoryName = e.target.dataset.categoryName;
-
+            this.currentCategory = categoryName;
+            $("#category-title").innerText = `${e.target.innerText} 메뉴 관리`
+            render();
         }
     })
 }
