@@ -18,19 +18,21 @@ function App() {
         $(".menu-count").innerText = `총 ${menuCount} 개`;
     }
     const updateMenuName = (e) => {
-        if (e.target.classList.contains("menu-edit-button")) {
-            // 현재 위치에서 상위로 올라가면서 가장 가까운 li 태그를 찾고 다시 그 아래 menu-name 쿼리를 선택
-            let $menuName = e.target.closest("li").querySelector(".menu-name");
-            let updatedMenuName = prompt("메뉴 이름을 수정해주세요.", $menuName.innerText);
-            $menuName.innerText = updatedMenuName;
-        }
+        // 현재 위치에서 상위로 올라가면서 가장 가까운 li 태그를 찾고 다시 그 아래 menu-name 쿼리를 선택
+        const menuId = e.target.closest("li").dataset.menuId;
+        let $menuName = e.target.closest("li").querySelector(".menu-name");
+        let updatedMenuName = prompt("메뉴 이름을 수정해주세요.", $menuName.innerText);
+        this.menu[menuId].name = updatedMenuName;
+        store.setLocalStorage(this.menu);
+        $menuName.innerText = updatedMenuName;
     }
     const deleteMenuName = (e) => {
-        if (e.target.classList.contains("menu-remove-button")) {
-            if (confirm("정말로 삭제하시겠습니까?")) {
-                e.target.closest("li").remove();
-                updateMenuCount();
-            }
+        if (confirm("정말로 삭제하시겠습니까?")) {
+            const menuId = e.target.closest("li").dataset.menuId;
+            this.menu.splice(menuId, 1);
+            store.setLocalStorage(this.menu);
+            e.target.closest("li").remove();
+            updateMenuCount();
         }
     }
     const addMenuName = () => {
@@ -42,8 +44,8 @@ function App() {
         this.menu.push({name : espressoMenuName});
         store.setLocalStorage(this.menu);
         const template = this.menu
-            .map(item => {
-                return `<li class="menu-list-item d-flex items-center py-2">
+            .map((item, index) => {
+                return `<li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
                           <span class="w-100 pl-2 menu-name">${item.name}</span>
                           <button
                             type="button"
@@ -67,8 +69,12 @@ function App() {
     }
 
     $("#espresso-menu-list").addEventListener("click", (e) => {
-        updateMenuName(e);
-        deleteMenuName(e);
+        if (e.target.classList.contains("menu-edit-button")){
+            updateMenuName(e);
+        }
+        if (e.target.classList.contains("menu-remove-button")){
+            deleteMenuName(e);
+        }
     })
     $("#espresso-menu-form").addEventListener("submit", (e) => {
         e.preventDefault();
