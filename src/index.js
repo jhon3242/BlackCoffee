@@ -33,8 +33,12 @@ function App() {
                 // 기존에 있던 li 에 추가로 붙이기 위해선 insertAdjacentHTML 사용
                 $("#espresso-menu-list").insertAdjacentHTML('beforeend', menuItemTemplate(espressoMenuName));
 
+                // 총 개수
                 let menuCount = $("#espresso-menu-list").querySelectorAll("li").length;
                 $(".menu-count").innerText = `총 ${menuCount} 개`;
+
+                // input 값 빈 값으로 초기화
+                $("#espresso-menu-name").value = "";
 
             }
 
