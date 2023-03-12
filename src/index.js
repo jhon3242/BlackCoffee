@@ -21,12 +21,12 @@ function App() {
                             >
                                 수정
                             </button>
-                            <button
+                            <button현
                                 type="button"
                                 className="bg-gray-50 text-gray-500 text-sm menu-remove-button"
                             >
                                 삭제
-                            </button>
+                            </button현>
                         </li>
                     `);
                 }
