@@ -1,6 +1,5 @@
 // 변수로 정의해둬서 코드의 반복을 줄인다.
 const $ = (selector) => document.querySelector(selector);
-
 const store = {
     setLocalStorage(menu) {
         localStorage.setItem("menu", JSON.stringify(menu));
@@ -10,9 +9,17 @@ const store = {
     }
 }
 function App() {
-    this.menu = [];
+    this.menu = {
+        espresso : [],
+        frappuccino : [],
+        blended : [],
+        teavana : [],
+        desert : []
+    };
+    this.currentCategory = 'espresso';
+
     const render = () => {
-        const template = this.menu
+        const template = this.menu[this.currentCategory]
             .map((item, index) => {
                 return `<li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
                           <span class="w-100 pl-2 menu-name">${item.name}</span>
@@ -34,9 +41,8 @@ function App() {
         $("#espresso-menu-list").innerHTML = template;
         updateMenuCount();
     }
-
     this.init = () => {
-        if (store.getLocalStorage().length > 0) {
+        if (store.getLocalStorage()) {
             this.menu = store.getLocalStorage();
         }
         render();
@@ -52,28 +58,26 @@ function App() {
         const menuId = e.target.closest("li").dataset.menuId;
         let $menuName = e.target.closest("li").querySelector(".menu-name");
         let updatedMenuName = prompt("메뉴 이름을 수정해주세요.", $menuName.innerText);
-        this.menu[menuId].name = updatedMenuName;
+        this.menu[this.currentCategory][menuId].name = updatedMenuName;
         store.setLocalStorage(this.menu);
         $menuName.innerText = updatedMenuName;
     }
     const deleteMenuName = (e) => {
         if (confirm("정말로 삭제하시겠습니까?")) {
             const menuId = e.target.closest("li").dataset.menuId;
-            this.menu.splice(menuId, 1);
+            this.menu[this.currentCategory].splice(menuId, 1);
             store.setLocalStorage(this.menu);
             e.target.closest("li").remove();
             updateMenuCount();
         }
     }
-
-
     const addMenuName = () => {
         if ($("#espresso-menu-name").value === "") {
             alert("값을 입력해주세요.")
             return;
         }
         let espressoMenuName = $("#espresso-menu-name").value;
-        this.menu.push({name : espressoMenuName});
+        this.menu[this.currentCategory].push({name : espressoMenuName});
         store.setLocalStorage(this.menu);
         render();
 
@@ -99,7 +103,13 @@ function App() {
             }
             addMenuName();
         });
+    $("nav").addEventListener("click", (e) => {
+        const isCategory = e.target.classList.contains("cafe-category-name");
+        if (isCategory) {
+            const categoryName = e.target.dataset.categoryName;
 
+        }
+    })
 }
 
 const app = new App();
