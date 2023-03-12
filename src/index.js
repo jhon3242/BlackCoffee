@@ -60,7 +60,7 @@ function App() {
         // input 값 빈 값으로 초기화
         $("#espresso-menu-name").value = "";
     }
-
+제
     $("#espresso-menu-list").addEventListener("click", (e) => {
         updateMenuName(e);
         deleteMenuName(e);
