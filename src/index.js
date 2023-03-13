@@ -1,6 +1,28 @@
 import { $ } from "./utils.js";
 import { store } from "./store.js";
 
+const BASE_URL = "http://localhost:3000/api";
+
+const MenuAPi = {
+    async getMenuAllByCategory(category) {
+        const response = await fetch(`${BASE_URL}/category/${category}/menu`);
+        return response.json();
+    },
+    async createMenu(category, name) {
+        const response = await fetch(`${BASE_URL}/category/${category}/menu`, {
+            method:"POST",
+            headers : {
+                "Content-Type" : "application/json",
+            },
+            body : JSON.stringify({name})
+        });
+        if (!response.ok) {
+            console.error("에러가 발생했습니다.");
+        }
+    }
+}
+
+
 function App() {
     this.menu = {
         espresso : [],
@@ -39,10 +61,8 @@ function App() {
         $("#menu-list").innerHTML = template;
         updateMenuCount();
     }
-    this.init = () => {
-        if (store.getLocalStorage()) {
-            this.menu = store.getLocalStorage();
-        }
+    this.init = async () => {
+        this.menu[this.currentCategory] = await MenuAPi.getMenuAllByCategory(this.currentCategory);
         render();
         initEventListeners();
     }
@@ -69,23 +89,23 @@ function App() {
             render();
         }
     }
-    const addMenuName = () => {
+    const addMenuName = async () => {
         if ($("#menu-name").value === "") {
             alert("값을 입력해주세요.")
             return;
         }
         let menuName = $("#menu-name").value;
-        this.menu[this.currentCategory].push({name : menuName});
-        store.setLocalStorage(this.menu);
+        await MenuAPi.createMenu(this.currentCategory, menuName);
+        this.menu[this.currentCategory] = await MenuAPi.getMenuAllByCategory(
+            this.currentCategory
+        );
         render();
-
-        // input 값 빈 값으로 초기화
         $("#menu-name").value = "";
     }
     const soldOutMenu = (e) => {
         const menuId = e.target.closest("li").dataset.menuId;
         this.menu[this.currentCategory][menuId].soldOut =
-            !this.menu[this.curren가tCategory][menuId].soldOut;
+            !this.menu[this.currentCategory][menuId].soldOut;
         store.setLocalStorage(this.menu);
         render();
     }
@@ -114,12 +134,15 @@ function App() {
                 }
                 addMenuName();
             });
-        $("nav").addEventListener("click", (e) => {
+        $("nav").addEventListener("click", async (e) => {
             const isCategory = e.target.classList.contains("cafe-category-name");
             if (isCategory) {
                 const categoryName = e.target.dataset.categoryName;
                 this.currentCategory = categoryName;
                 $("#category-title").innerText = `${e.target.innerText} 메뉴 관리`
+                this.menu[this.currentCategory] = await MenuAPi.getMenuAllByCategory(
+                    this.currentCategory
+                );
                 render();
             }
         })
