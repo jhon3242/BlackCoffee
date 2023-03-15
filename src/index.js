@@ -26,7 +26,9 @@ function App() {
       </button>
     </li>`
         const menuList = this.state[this.category].map(template).join("");
+        const count = this.state[this.category].length;
         $("#espresso-menu-list").innerHTML = menuList;
+        $(".menu-count").innerText = `총 ${count}개`;
     }
 
     const addMenu = () => {
