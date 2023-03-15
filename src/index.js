@@ -33,6 +33,12 @@ function App() {
 
     const addMenu = () => {
         const menuName = $("#espresso-menu-name").value;
+
+        if (menuName === '') {
+            alert("값을 입력해주세요.");
+            return ;
+        }
+
         this.state[this.category].push(menuName);
         render();
         $("#espresso-menu-name").value = "";
