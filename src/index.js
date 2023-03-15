@@ -9,8 +9,8 @@ function App() {
     this.category = "espresso";
 
     const render = () => {
-        const template = (name) => `
-        <li class="menu-list-item d-flex items-center py-2">
+        const template = (name, idx) => `
+        <li data-menu-id="${idx}" class="menu-list-item d-flex items-center py-2">
       <span class="w-100 pl-2 menu-name">${name}</span>
       <button
         type="button"
@@ -31,7 +31,9 @@ function App() {
         $(".menu-count").innerText = `총 ${count}개`;
     }
 
-    const setMenuName = (menuName) => {
+
+    const addMenu = () => {
+        const menuName = $("#menu-name").value;
         if (menuName === '') {
             alert("값을 입력해주세요.");
             return ;
@@ -41,13 +43,15 @@ function App() {
         render();
         $("#menu-name").value = "";
     }
-    const addMenu = () => {
-        const menuName = $("#menu-name").value;
-        setMenuName(menuName);
-    }
     const updateMenu = (e) => {
         const newName = prompt("수정할 이름을 입력해주세요.");
-        setMenuName(newName);
+        if (newName === '') {
+            alert("값을 입력해주세요.");
+            return ;
+        }
+        const menuId = e.target.closest("li").dataset.menuId;
+        this.state[this.category][menuId] = newName;
+        render();
     }
 
 
@@ -61,9 +65,11 @@ function App() {
             }
         });
     $("#menu-submit-button").addEventListener('click', addMenu);
-    // $("#menu-list").addEventListener('click', (e) => {
-    //     e.
-    // })
+    $("#menu-list").addEventListener('click', (e) => {
+        if (e.target.classList.contains("menu-edit-button")) {
+            updateMenu(e);
+        }
+    })
 }
 
 new App();
