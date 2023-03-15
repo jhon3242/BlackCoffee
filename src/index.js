@@ -1,18 +1,33 @@
 
+
+const $ = (element) => document.querySelector(element);
+
 function App() {
+    this.state = {
+        espresso : []
+    };
+    this.category = "espresso";
+
+    const addMenu = (menuName) => {
+        this.state[this.category].push(menuName);
+        console.log(this.state[this.category])
+    }
+
+
     // form 테그가 자동으로 전송되는 것을 막는다.
-    document.querySelector("#espresso-menu-form").addEventListener("submit", (e) => {
+    $("#espresso-menu-form").addEventListener("submit", (e) => {
         e.preventDefault();
     })
 
-    // 메뉴의 이름을 입력 받는다.
-    document
-        .querySelector("#espresso-menu-name")
-        .addEventListener('keypress', (e) => {
+
+    $("#espresso-menu-name").addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                console.log(document.querySelector("#espresso-menu-name").value)
+                addMenu($("#espresso-menu-name").value);
             }
-        })
+        });
+    $("#espresso-menu-submit-button").addEventListener('click', () => {
+        addMenu($("#espresso-menu-name").value);
+    })
 }
 
-App();
+new App();
