@@ -27,13 +27,11 @@ function App() {
     </li>`
         const menuList = this.state[this.category].map(template).join("");
         const count = this.state[this.category].length;
-        $("#espresso-menu-list").innerHTML = menuList;
+        $("#menu-list").innerHTML = menuList;
         $(".menu-count").innerText = `총 ${count}개`;
     }
 
-    const addMenu = () => {
-        const menuName = $("#espresso-menu-name").value;
-
+    const setMenuName = (menuName) => {
         if (menuName === '') {
             alert("값을 입력해주세요.");
             return ;
@@ -41,21 +39,31 @@ function App() {
 
         this.state[this.category].push(menuName);
         render();
-        $("#espresso-menu-name").value = "";
+        $("#menu-name").value = "";
+    }
+    const addMenu = () => {
+        const menuName = $("#menu-name").value;
+        setMenuName(menuName);
+    }
+    const updateMenu = (e) => {
+        const newName = prompt("수정할 이름을 입력해주세요.");
+        setMenuName(newName);
     }
 
+
     // form 테그가 자동으로 전송되는 것을 막는다.
-    $("#espresso-menu-form").addEventListener("submit", (e) => {
+    $("#menu-form").addEventListener("submit", (e) => {
         e.preventDefault();
     })
-
-
-    $("#espresso-menu-name").addEventListener('keypress', (e) => {
+    $("#menu-name").addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 addMenu();
             }
         });
-    $("#espresso-menu-submit-button").addEventListener('click', addMenu);
+    $("#menu-submit-button").addEventListener('click', addMenu);
+    // $("#menu-list").addEventListener('click', (e) => {
+    //     e.
+    // })
 }
 
 new App();
