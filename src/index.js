@@ -7,7 +7,9 @@ function App() {
         espresso : []
     };
     this.category = "espresso";
-    const template = (name) => `
+
+    const render = () => {
+        const template = (name) => `
         <li class="menu-list-item d-flex items-center py-2">
       <span class="w-100 pl-2 menu-name">${name}</span>
       <button
@@ -23,17 +25,16 @@ function App() {
         삭제
       </button>
     </li>`
-    const render = () => {
         const menuList = this.state[this.category].map(template).join("");
         $("#espresso-menu-list").innerHTML = menuList;
     }
 
-    const addMenu = (menuName) => {
+    const addMenu = () => {
+        const menuName = $("#espresso-menu-name").value;
         this.state[this.category].push(menuName);
         render();
+        $("#espresso-menu-name").value = "";
     }
-
-
 
     // form 테그가 자동으로 전송되는 것을 막는다.
     $("#espresso-menu-form").addEventListener("submit", (e) => {
@@ -43,12 +44,10 @@ function App() {
 
     $("#espresso-menu-name").addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                addMenu($("#espresso-menu-name").value);
+                addMenu();
             }
         });
-    $("#espresso-menu-submit-button").addEventListener('click', () => {
-        addMenu($("#espresso-menu-name").value);
-    })
+    $("#espresso-menu-submit-button").addEventListener('click', addMenu);
 }
 
 new App();
